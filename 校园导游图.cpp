@@ -9,609 +9,602 @@ typedef int datatype;
 
 typedef struct
 {
-	int number;//¾°µã±àºÅ
-	char name[20];//¾°µãÃû³Æ
-	char description[500];//¾°µã¼ò½é
+	int number;//æ™¯ç‚¹ç¼–å·
+	char name[20];//æ™¯ç‚¹åç§°
+	char description[500];//æ™¯ç‚¹ç®€ä»‹
 }Vertype;
 
-//ÁÚ½Ó¾ØÕó
+//é‚»æ¥çŸ©é˜µ
 typedef struct
 {
-	int arcs[MAXVER][MAXVER];//±ß
-	Vertype vertex[MAXVER];//¶¥µã¼¯
+	int arcs[MAXVER][MAXVER];//è¾¹
+	Vertype vertex[MAXVER];//é¡¶ç‚¹é›†
 
-	int vernum;//¾°µãÊı
-	int arcnum;//Â·¾¶Êı
-	int weight;//Â·¾¶³¤¶È
+	int vernum;//æ™¯ç‚¹æ•°
+	int arcnum;//è·¯å¾„æ•°
+	int weight;//è·¯å¾„é•¿åº¦
 }AdjMatrix;
 
-void Menu(AdjMatrix *G);//Ö÷²Ù×÷²Ëµ¥
-void ShowSpot(AdjMatrix *G);//Õ¹Ê¾Ö÷Òª¾°µã
-void Display(AdjMatrix *G);//ÏÔÊ¾¾°µãĞÅÏ¢
+void Menu(AdjMatrix *G);//ä¸»æ“ä½œèœå•
+void ShowSpot(AdjMatrix *G);//å±•ç¤ºä¸»è¦æ™¯ç‚¹
+void Display(AdjMatrix *G);//æ˜¾ç¤ºæ™¯ç‚¹ä¿¡æ¯
 void Display_DFS(AdjMatrix *G);
 void Display_BFS(AdjMatrix *G);
-void Search(AdjMatrix *G);//²éÑ¯¾°µãĞÅÏ¢
+void Search(AdjMatrix *G);//æŸ¥è¯¢æ™¯ç‚¹ä¿¡æ¯
 void Search_num(AdjMatrix *G);
 void Search_name(AdjMatrix *G);
-void Add(AdjMatrix *G);//Ìí¼Ó¾°µãĞÅÏ¢
-void Delete(AdjMatrix *G);//É¾³ıÂ·¾¶ĞÅÏ¢
+void Add(AdjMatrix *G);//æ·»åŠ æ™¯ç‚¹ä¿¡æ¯
+void Delete(AdjMatrix *G);//åˆ é™¤è·¯å¾„ä¿¡æ¯
 void Delete_num(AdjMatrix *G);
 void Delete_name(AdjMatrix *G);
 void Path1(AdjMatrix *G);
 void Path2(AdjMatrix *G);
-void PathAll(AdjMatrix *G);//Á½¸ö¾°µãÖ®¼äµÄËùÓĞÂ·¾¶
-void Dijkstra(AdjMatrix *G,int start,int end,int dist[],int path[][MAXVER]);
-void ShortPath(AdjMatrix *G);//Á½¸ö¾°µãÖ®¼äµÄ×î¶ÌÂ·¾¶
-void Prim(AdjMatrix *G,int start);
-void MiniSpanTree(AdjMatrix *G);//×î¶ÌÁ¬Í¨Â·¾¶
+void PathAll(AdjMatrix *G);//ä¸¤ä¸ªæ™¯ç‚¹ä¹‹é—´çš„æ‰€æœ‰è·¯å¾„
+void Dijkstra(AdjMatrix *G, int start, int end, int dist[], int path[][MAXVER]);
+void ShortPath(AdjMatrix *G);//ä¸¤ä¸ªæ™¯ç‚¹ä¹‹é—´çš„æœ€çŸ­è·¯å¾„
+void Prim(AdjMatrix *G, int start);
+void MiniSpanTree(AdjMatrix *G);//æœ€çŸ­è¿é€šè·¯å¾„
 
-//È·¶¨Î»ÖÃ
-int LocateVer(AdjMatrix *G,char name[])
+//ç¡®å®šä½ç½®
+int LocateVer(AdjMatrix *G, char name[])
 {
-	for(int i=1;i<=G->vernum;i++)
+	for(int i = 1; i <= G->vernum; i++)
 	{
-		if(strcmp(G->vertex[i].name,name)==0)
+		if(strcmp(G->vertex[i].name,name) == 0)
 			return i;
 	}
  
-    return -1; 
+        return -1; 
 }
 
-//¾°µãĞÅÏ¢´æÈëÎÄ¼ş
-void WriteFile1(AdjMatrix *G,int num,char name[],char description[])
+//æ™¯ç‚¹ä¿¡æ¯å­˜å…¥æ–‡ä»¶
+void WriteFile1(AdjMatrix *G, int num, char name[], char description[])
 {
 	FILE *fp;
-	
-	fp=fopen("sight.txt","at");//ÒÔ×·¼ÓµÄ·½Ê½´ò¿ª´æ´æ´¢¾°µãĞÅÏ¢µÄÎÄ¼ş
-	if(fp==NULL)
+	fp = fopen("sight.txt", "at");//ä»¥è¿½åŠ çš„æ–¹å¼æ‰“å¼€å­˜å­˜å‚¨æ™¯ç‚¹ä¿¡æ¯çš„æ–‡ä»¶
+	if(fp == NULL)
 	{
-		printf("´ò¿ªÎÄ¼şÊ§°Ü!¸ÃÎÄ¼ş¿ÉÄÜ²»´æÔÚ!");
+		printf("æ‰“å¼€æ–‡ä»¶å¤±è´¥!è¯¥æ–‡ä»¶å¯èƒ½ä¸å­˜åœ¨!");
 		exit(0);
 	}
-	fprintf(fp,"%d %s %s\n",num,name,description);
+	fprintf(fp, "%d %s %s\n", num, name, description);
 	fclose(fp);
-
 }
 
-//Â·¾¶ĞÅÏ¢´æÈëÎÄ¼ş
-void WriteFile2(AdjMatrix *G,char name1[],char name2[],int weight)
+//è·¯å¾„ä¿¡æ¯å­˜å…¥æ–‡ä»¶
+void WriteFile2(AdjMatrix *G, char name1[], char name2[], int weight)
 {
 	FILE *fp;
-	
-	fp=fopen("road.txt","at");//ÒÔ×·¼ÓµÄ·½Ê½´ò¿ª´æ´¢Â·Ïß³¤¶ÈµÄÎÄ¼ş
-	if(fp==NULL)
+	fp = fopen("road.txt", "at");//ä»¥è¿½åŠ çš„æ–¹å¼æ‰“å¼€å­˜å‚¨è·¯çº¿é•¿åº¦çš„æ–‡ä»¶
+	if(fp == NULL)
 	{
-		printf("´ò¿ªÎÄ¼şÊ§°Ü!¸ÃÎÄ¼ş¿ÉÄÜ²»´æÔÚ!");
+		printf("æ‰“å¼€æ–‡ä»¶å¤±è´¥!è¯¥æ–‡ä»¶å¯èƒ½ä¸å­˜åœ¨!");
 		exit(0);
 	}
-	fprintf(fp,"%s %s %d\n",name1,name2,weight);
+	fprintf(fp,"%s %s %d\n", name1, name2, weight);
 	fclose(fp);
-
 }
 
-//´ÓÎÄ¼şÖĞ¶ÁÈ¡ĞÅÏ¢´æÈëÁÚ½Ó¾ØÕó
+//ä»æ–‡ä»¶ä¸­è¯»å–ä¿¡æ¯å­˜å…¥é‚»æ¥çŸ©é˜µ
 void ReadFile(AdjMatrix *G)
 {
 	FILE *fp;
-	int i=1,j;
-	int n=1;
-	char name1[20],name2[20];
+	int i = 1, j;
+	int n = 1;
+	char name1[20], name2[20];
 	int weight;
 	
-	fp=fopen("sight.txt", "rt+");//´ò¿ª´æ´¢¾°µãĞÅÏ¢µÄÎÄ¼ş
-	if(fp==NULL)
+	fp = fopen("sight.txt", "rt+");//æ‰“å¼€å­˜å‚¨æ™¯ç‚¹ä¿¡æ¯çš„æ–‡ä»¶
+	if(fp == NULL)
 	{
-		printf("´ò¿ªÎÄ¼şÊ§°Ü!¸ÃÎÄ¼ş¿ÉÄÜ²»´æÔÚ!\n");
+		printf("æ‰“å¼€æ–‡ä»¶å¤±è´¥!è¯¥æ–‡ä»¶å¯èƒ½ä¸å­˜åœ¨!\n");
 		exit(0);
 	}
 
 	while(!feof(fp))
 	{
-		fscanf(fp,"%d%s%s\n",&G->vertex [i].number ,G->vertex [i].name ,G->vertex [i].description);
+		fscanf(fp,"%d%s%s\n", &G->vertex[i].number, G->vertex[i].name, G->vertex[i].description);
 		i++;
 	}
-	G->vernum=i;
+	G->vernum = i;
 	fclose(fp);
 
-	fp=fopen("road.txt","rt+");//´ò¿ª´æ´¢Â·¾¶ĞÅÏ¢µÄÎÄ¼ş
-	if(fp==NULL)
+	fp = fopen("road.txt", "rt+");//æ‰“å¼€å­˜å‚¨è·¯å¾„ä¿¡æ¯çš„æ–‡ä»¶
+	if(fp == NULL)
 	{
-		printf("ÎÄ¼ş´ò¿ªÊ§°Ü!¸ÃÎÄ¼ş¿ÉÄÜ²»´æÔÚ!\n");
+		printf("æ–‡ä»¶æ‰“å¼€å¤±è´¥!è¯¥æ–‡ä»¶å¯èƒ½ä¸å­˜åœ¨!\n");
 		exit(0);
 	}
 
-	//³õÊ¼»¯Â·¾¶³¤¶È
-	for(i=1;i<=G->vernum;i++)
-		for(j=1;j<=G->vernum;j++ )
-			G->arcs[i][j]=INFINITY;
+	//åˆå§‹åŒ–è·¯å¾„é•¿åº¦
+	for(i = 1; i <= G->vernum; i++)
+		for(j = 1; j <= G->vernum; j++ )
+			G->arcs[i][j] = INFINITY;
   
 	while (!feof(fp))
 	{
-		fscanf(fp,"%s%s%d",name1,name2,&weight);
-	    i=LocateVer(G,name1);
-		j=LocateVer(G,name2);
-		G->arcs[i][j]=G->arcs[j][i]=weight;
+		fscanf(fp, "%s%s%d", name1, name2, &weight);
+	        i = LocateVer(G, name1);
+		j = LocateVer(G, name2);
+		G->arcs[i][j] = G->arcs[j][i] = weight;
 		n++;
 	}
 
-	G->arcnum=n;
+	G->arcnum = n;
 	fclose(fp);
 }
 
-//Ö÷²Ù×÷²Ëµ¥
+//ä¸»æ“ä½œèœå•
 void Menu(AdjMatrix *G)
 {
 	int choice;
-	printf("\t************************»¶Ó­Ê¹ÓÃĞ£Ô°µ¼ÓÎÍ¼ÏµÍ³*******************\n\n");
-    printf("\t\t-------------------------------------------------\n\n");
+	printf("\t************************æ¬¢è¿ä½¿ç”¨æ ¡å›­å¯¼æ¸¸å›¾ç³»ç»Ÿ*******************\n\n");
+        printf("\t\t-------------------------------------------------\n\n");
 	printf("\t\t|                                               |\n");
-    printf("\t\t|            1.ÏÔÊ¾Ö÷Òª¾°µã                     |\n");
-	printf("\t\t|            2.ÏÔÊ¾ËùÓĞ¾°µãĞÅÏ¢                 |\n");
-    printf("\t\t|            3.²éÑ¯Ä³¸ö¾°µãĞÅÏ¢                 |\n");
-    printf("\t\t|            4.Ìí¼Ó¾°µãĞÅÏ¢                     |\n");
-    printf("\t\t|            5.É¾³ı¾°µãĞÅÏ¢                     |\n");
-    printf("\t\t|            6.²éÑ¯Á½¸ö¾°µãÖ®¼äµÄËùÓĞÂ·¾¶       |\n");
-    printf("\t\t|            7.²éÑ¯Á½¸ö¾°µãÖ®¼äµÄ×î¶ÌÂ·¾¶       |\n");
-    printf("\t\t|            8.²éÑ¯×î¶ÌÁ¬Í¨Â·¾¶                 |\n");
-    printf("\t\t|            0.ÍË³öÏµÍ³                         |\n\n");
-    printf("\t\t|                                               |\n");
+        printf("\t\t|            1.æ˜¾ç¤ºä¸»è¦æ™¯ç‚¹                     |\n");
+	printf("\t\t|            2.æ˜¾ç¤ºæ‰€æœ‰æ™¯ç‚¹ä¿¡æ¯                 |\n");
+        printf("\t\t|            3.æŸ¥è¯¢æŸä¸ªæ™¯ç‚¹ä¿¡æ¯                 |\n");
+        printf("\t\t|            4.æ·»åŠ æ™¯ç‚¹ä¿¡æ¯                     |\n");
+        printf("\t\t|            5.åˆ é™¤æ™¯ç‚¹ä¿¡æ¯                     |\n");
+        printf("\t\t|            6.æŸ¥è¯¢ä¸¤ä¸ªæ™¯ç‚¹ä¹‹é—´çš„æ‰€æœ‰è·¯å¾„       |\n");
+        printf("\t\t|            7.æŸ¥è¯¢ä¸¤ä¸ªæ™¯ç‚¹ä¹‹é—´çš„æœ€çŸ­è·¯å¾„       |\n");
+        printf("\t\t|            8.æŸ¥è¯¢æœ€çŸ­è¿é€šè·¯å¾„                 |\n");
+        printf("\t\t|            0.é€€å‡ºç³»ç»Ÿ                         |\n\n");
+        printf("\t\t|                                               |\n");
 	printf("\t\t-------------------------------------------------\n\n");
 	
-    printf("\tÇëÊäÈëÄúµÄÑ¡Ôñ(0~8):");
-    scanf("%d",&choice);
-    switch(choice)
-    {
-      case 1:ShowSpot(G);break; 
-	  case 2:Display(G);break;
-      case 3:Search(G);break;
-      case 4:Add(G);break;
-      case 5:Delete(G);break;
-	  case 6:PathAll(G);break;
-	  case 7:ShortPath(G);break;
-      case 8:MiniSpanTree(G);break;
-    }
-	
+        printf("\tè¯·è¾“å…¥æ‚¨çš„é€‰æ‹©(0~8):");
+        scanf("%d", &choice);
+        switch(choice)
+        {
+        	case 1:ShowSpot(G); break; 
+	        case 2:Display(G); break;
+                case 3:Search(G); break;
+                case 4:Add(G); break;
+                case 5:Delete(G); break;
+	        case 6:PathAll(G); break;
+	        case 7:ShortPath(G); break;
+                case 8:MiniSpanTree(G); break;
+        }
 }
 
-//ÏÔÊ¾Ö÷Òª¾°µã
+//æ˜¾ç¤ºä¸»è¦æ™¯ç‚¹
 void ShowSpot(AdjMatrix *G)
 {
-    printf("\t***********************************************************************\n");
-	printf("\t*                          Ö÷Òª¾°µãÁĞ±í                               *\n");
+        printf("\t***********************************************************************\n");
+	printf("\t*                          ä¸»è¦æ™¯ç‚¹åˆ—è¡¨                               *\n");
 	printf("\t***********************************************************************\n\n");
 	printf("\t      ----------------------------------------------------------\n");	
-	printf("\t      |                           Î÷Çø                         |\n");
-	printf("\t      |     <1>.Î÷Çø±±ÃÅ                        <2>.ĞĞÕşÂ¥     |\n");
-	printf("\t      |     <3>.½ÌÑ§Â¥                          <4>.ÊµÑéÂ¥     |\n");
-	printf("\t      |     <5>.´óÑ§Éú»î¶¯ÖĞĞÄ                  <6>.Í¼Êé¹İ     |\n");
-	printf("\t      |     <7>.Î÷ÓÊºş                                         |\n");
-	printf("\t      |     <8>.Ï´Ô¡ÖĞĞÄ                        <9>.Ò½ÁÆÖĞĞÄ   |\n");
-	printf("\t      |     <10>.Î÷²Ù³¡                         <11>.ÃÀÊ³¹ã³¡  |\n");
-	printf("\t      |     <12>.ÌåÓı¹İ                         <13>.Ìï¾¶³¡    |\n");
-	printf("\t      |     <14>.ĞñÈÕÔ·                         <15>.Î÷Ñ§Éú¹«Ô¢|\n");
-	printf("\t      |     <16>.»ù½¨ºóÇÚ´óÔº                   <17>.Î÷Çø¶«ÃÅ  |\n");
+	printf("\t      |                           è¥¿åŒº                         |\n");
+	printf("\t      |     <1>.è¥¿åŒºåŒ—é—¨                        <2>.è¡Œæ”¿æ¥¼     |\n");
+	printf("\t      |     <3>.æ•™å­¦æ¥¼                          <4>.å®éªŒæ¥¼     |\n");
+	printf("\t      |     <5>.å¤§å­¦ç”Ÿæ´»åŠ¨ä¸­å¿ƒ                  <6>.å›¾ä¹¦é¦†     |\n");
+	printf("\t      |     <7>.è¥¿é‚®æ¹–                                         |\n");
+	printf("\t      |     <8>.æ´—æµ´ä¸­å¿ƒ                        <9>.åŒ»ç–—ä¸­å¿ƒ   |\n");
+	printf("\t      |     <10>.è¥¿æ“åœº                         <11>.ç¾é£Ÿå¹¿åœº  |\n");
+	printf("\t      |     <12>.ä½“è‚²é¦†                         <13>.ç”°å¾„åœº    |\n");
+	printf("\t      |     <14>.æ—­æ—¥è‹‘                         <15>.è¥¿å­¦ç”Ÿå…¬å¯“|\n");
+	printf("\t      |     <16>.åŸºå»ºåå‹¤å¤§é™¢                   <17>.è¥¿åŒºä¸œé—¨  |\n");
 	printf("\t      ----------------------------------------------------------\n");
-	printf("\t      |                        <18>Î÷ÓÊÌìÇÅ                    |\n");
+	printf("\t      |                        <18>è¥¿é‚®å¤©æ¡¥                    |\n");
 
 	printf("\t      ----------------------------------------------------------\n");	
-	printf("\t      |                            ¶«Çø                        |\n");
-	printf("\t      |     <19>.¶«ÇøÎ÷ÄÏÃÅ                     <20>.¼ÒÊôÂ¥    |\n");
-	printf("\t      |     <21>.²ÍÌü³¬ÊĞ                       <22>.Ô¡ÊÒ      |\n");
-	printf("\t      |     <23>.¶«Ñ§Éú¹«Ô¢                     <24>.×ÛºÏ½ÌÑ§Â¥|\n");
-	printf("\t      |     <25>.¶«ÇøÎ÷±±ÃÅ                                    |\n");
+	printf("\t      |                            ä¸œåŒº                        |\n");
+	printf("\t      |     <19>.ä¸œåŒºè¥¿å—é—¨                     <20>.å®¶å±æ¥¼    |\n");
+	printf("\t      |     <21>.é¤å…è¶…å¸‚                       <22>.æµ´å®¤      |\n");
+	printf("\t      |     <23>.ä¸œå­¦ç”Ÿå…¬å¯“                     <24>.ç»¼åˆæ•™å­¦æ¥¼|\n");
+	printf("\t      |     <25>.ä¸œåŒºè¥¿åŒ—é—¨                                    |\n");
 	printf("\t      ----------------------------------------------------------\n\n");
 
 	getchar();
-	printf("\t°´ÈÎÒâ¼ü·µ»ØÖ÷²Ëµ¥!");
+	printf("\tæŒ‰ä»»æ„é”®è¿”å›ä¸»èœå•!");
 	getc(stdin);
 	Menu(G);
-
 } 
 
 
-//ÏÔÊ¾²Ëµ¥
+//æ˜¾ç¤ºèœå•
 void DisplayMenu(AdjMatrix *G)
 {   
-    int  choice;
+        int  choice;
 
 	printf("\t\t\t------------------------------------------------\n\n");
-	printf("\t\t\t|               »¶Ó­½øÈëÏÔÊ¾²Ëµ¥               |\n");
-    printf("\t\t\t|                                              |\n");
-	printf("\t\t\t|                1.DFSËÑË÷ÏÔÊ¾                  |\n");
-	printf("\t\t\t|                2.BFSËÑË÷ÏÔÊ¾                 |\n");
-	printf("\t\t\t|                0.·µ»ØÖ÷²Ëµ¥                       |\n");
+	printf("\t\t\t|               æ¬¢è¿è¿›å…¥æ˜¾ç¤ºèœå•               |\n");
+        printf("\t\t\t|                                              |\n");
+	printf("\t\t\t|                1.DFSæœç´¢æ˜¾ç¤º                  |\n");
+	printf("\t\t\t|                2.BFSæœç´¢æ˜¾ç¤º                 |\n");
+	printf("\t\t\t|                0.è¿”å›ä¸»èœå•                       |\n");
 	printf("\t\t\t|                                              |\n");
 	printf("\t\t\t------------------------------------------------\n\n");
 
-    printf("\tÇëÊäÈëÄúµÄÑ¡Ôñ(0~2):");
-	scanf("%d",&choice);
+        printf("\tè¯·è¾“å…¥æ‚¨çš„é€‰æ‹©(0~2):");
+	scanf("%d", &choice);
 	switch(choice)
 	{
-	case 1:Display_DFS(G);break;
-	case 2:Display_BFS(G);break;
-	case 0:Menu(G);break;
+		case 1:Display_DFS(G); break;
+		case 2:Display_BFS(G); break;
+		case 0:Menu(G); break;
 	}
 }
 
-//Éî¶ÈÓÅÏÈ±éÀú
-int visited1[MAXVER]={0};
-void DFS(AdjMatrix *G,int vi)
+//æ·±åº¦ä¼˜å…ˆéå†
+int visited1[MAXVER] = {0};
+void DFS(AdjMatrix *G, int vi)
 {
 	int vj;
-	printf("%d %s %s\n",G->vertex[vi].number,G->vertex[vi].name,G->vertex[vi].description);
-	visited1[vi]=1;//ÒÑ·ÃÎÊ¹ıÔò¸³ÖµÎª1
+	printf("%d %s %s\n", G->vertex[vi].number, G->vertex[vi].name, G->vertex[vi].description);
+	visited1[vi] = 1;//å·²è®¿é—®è¿‡åˆ™èµ‹å€¼ä¸º1
 	
-	vj=1;
-    while(vj<=G->vernum)
+	vj = 1;
+        while(vj <= G->vernum)
 	{
-		if(!visited1[vj]&&G->arcs[vi][vj]!=INFINITY)//vjµãÎ´·ÃÎÊÇÒvi-vj±ß´æÔÚ
-			DFS(G,vj);//·ÃÎÊvj
+		if(!visited1[vj] && G->arcs[vi][vj] != INFINITY)//vjç‚¹æœªè®¿é—®ä¸”vi-vjè¾¹å­˜åœ¨
+			DFS(G,vj);//è®¿é—®vj
 		vj++;
 	}
 }
 
-//Éî¶ÈÓÅÏÈ±éÀú£¨·ÇÁ¬Í¨Í¼£©
+//æ·±åº¦ä¼˜å…ˆéå†ï¼ˆéè¿é€šå›¾ï¼‰
 int visited3[MAXVER];
 void UDFS(AdjMatrix *G)     
 {
     int i;
-    for (i=1; i<=G->vernum; i++)
+    for (i = 1; i <= G->vernum; i++)
     {
         visited3[i]=0;
     }
-    for (i=1; i<G->vernum; i++)
+    for (i = 1; i <G ->vernum; i++)
     {
-        if (visited3[i]==0)
+        if (visited3[i] == 0)
             DFS(G,i);
     }
 }
 
-typedef struct QueueNode//Ñ­»·¶ÓÁĞ½áµã¶¨Òå
+typedef struct QueueNode//å¾ªç¯é˜Ÿåˆ—ç»“ç‚¹å®šä¹‰
 {
 	datatype data[MAXVER];
-	int front,rear;
+	int front, rear;
 }CSqQueue;
 
-void InitQueue(CSqQueue *sq)//Ñ­»·¶ÓÁĞ³õÊ¼»¯
+void InitQueue(CSqQueue *sq)//å¾ªç¯é˜Ÿåˆ—åˆå§‹åŒ–
 {
-	sq->front =sq->rear =0;
+	sq->front = sq->rear = 0;
 }
 
-int  IsEmpty(CSqQueue *sq)//Ñ­»·¶ÓÁĞÅĞ¿Õ
+int  IsEmpty(CSqQueue *sq)//å¾ªç¯é˜Ÿåˆ—åˆ¤ç©º
 {
-	if(sq->front ==sq->rear )
+	if(sq->front == sq->rear )
 		return TRUE;
 	else 
 		return FALSE;
 }
  
-int IsFull(CSqQueue *sq)//Ñ­»·¶ÓÁĞÅĞÂú
+int IsFull(CSqQueue *sq)//å¾ªç¯é˜Ÿåˆ—åˆ¤æ»¡
 {
-	if((sq->rear +1)%MAXVER==sq->front)
+	if((sq->rear + 1) % MAXVER == sq->front)
 		return TRUE;
 	else 
 		return FALSE;
 }
 
-int InQueue(CSqQueue *sq,int x)//Èë¶Ó
+int InQueue(CSqQueue *sq, int x)//å…¥é˜Ÿ
 {
 	if(IsFull(sq))
 	{
-		printf("¶ÓÂú!\n");
+		printf("é˜Ÿæ»¡!\n");
 		return FALSE;
 	}
-
 	else
 	{
-		sq->data [sq->rear ]=x;
-		sq->rear =(sq->rear+1)%MAXVER;
-      	return TRUE;
+		sq->data[sq->rear] = x;
+		sq->rear = (sq->rear + 1) % MAXVER;
+      	        return TRUE;
 	}
 }
 
-int OutQueue(CSqQueue *sq,int *x)
+int OutQueue(CSqQueue *sq, int *x)
 {
 	if(IsEmpty(sq))
 	{
-		printf("¶Ó¿Õ!\n");
+		printf("é˜Ÿç©º!\n");
 		return FALSE;
 	}
 	else
 	{
-		*x=sq->data[sq->front];
-		sq->front=(sq->front+1)%MAXVER;
+		*x = sq->data[sq->front];
+		sq->front = (sq->front + 1) % MAXVER;
 		return TRUE;
 	}
 }
 
-//¹ã¶ÈÓÅÏÈ±éÀú
-int visited2[MAXVER]={0};
-void BFS(AdjMatrix *G,int va)
+//å¹¿åº¦ä¼˜å…ˆéå†
+int visited2[MAXVER] = {0};
+void BFS(AdjMatrix *G, int va)
 {
-	int v, vb;//vbÊÇ¶¥µãÔÚÊı×éÖĞµÄÏÂ±ê
+	int v, vb;//vbæ˜¯é¡¶ç‚¹åœ¨æ•°ç»„ä¸­çš„ä¸‹æ ‡
 	CSqQueue *Q;
-    Q=(CSqQueue *)malloc(sizeof(CSqQueue));
+        Q=(CSqQueue *)malloc(sizeof(CSqQueue));
 	InitQueue(Q);
-    printf("%d %s %s\n",G->vertex[va].number,G->vertex[va].name,G->vertex[va].description);
-	visited2[va]=1;//ÒÑ·ÃÎÊ¹ıµÄ¸³Öµ1
-    InQueue(Q,va);//ÒÑ·ÃÎÊ¹ıµÄµãÈë¶Ó
+        printf("%d %s %s\n", G->vertex[va].number, G->vertex[va].name, G->vertex[va].description);
+	visited2[va] = 1;//å·²è®¿é—®è¿‡çš„èµ‹å€¼1
+        InQueue(Q, va);//å·²è®¿é—®è¿‡çš„ç‚¹å…¥é˜Ÿ
 
 	while(!IsEmpty(Q))
 	{
-		OutQueue(Q,&v);//¶ÔÍ·³ö¶Ó£¬²¢½«¶ÓÍ·ÔªËØ¸³¸øv
-		for(vb=1;vb<=G->vernum;vb++)
+		OutQueue(Q, &v);//å¯¹å¤´å‡ºé˜Ÿï¼Œå¹¶å°†é˜Ÿå¤´å…ƒç´ èµ‹ç»™v
+		for(vb = 1; vb <= G->vernum; vb++)
 		{
-			if((!visited2[vb])&&(G->arcs[v][vb]!=INFINITY))//vjÎ´·ÃÎÊÇÒv-vbÕâÌõ±ß´æÔÚ
+			if((!visited2[vb]) && (G->arcs[v][vb] != INFINITY))//vjæœªè®¿é—®ä¸”v-vbè¿™æ¡è¾¹å­˜åœ¨
 			{
-				printf("%d %s %s\n",G->vertex[vb].number,G->vertex[vb].name,G->vertex[vb].description);
-                visited2[vb]=1;
-			    InQueue(Q,vb);	
+				printf("%d %s %s\n", G->vertex[vb].number, G->vertex[vb].name, G->vertex[vb].description);
+                                visited2[vb] = 1;
+			        InQueue(Q, vb);	
 			}
 		}
 	}
 }
 
-//¹ã¶ÈÓÅÏÈ±éÀú£¨·ÇÁ¬Í¨Í¼£©
+//å¹¿åº¦ä¼˜å…ˆéå†ï¼ˆéè¿é€šå›¾ï¼‰
 int visited4[MAXVER];
 void UBFS(AdjMatrix *G)     
 {
-    int i;
-    for (i=1; i<=G->vernum; i++)
-    {
-        visited4[i]=0;
-    }
-    for (i=1; i<G->vernum; i++)
-    {
-        if (visited4[i]==0)
-            BFS(G,i);
-    }
+	int i;
+        for (i = 1; i <= G->vernum; i++)
+        {
+        	visited4[i] = 0;
+        }
+        for (i = 1; i < G->vernum; i++)
+        {
+        	if (visited4[i] == 0)
+                BFS(G,i);
+        }
 }
 
 
-//DFSÏÔÊ¾ËùÓĞ¾°µãĞÅÏ¢
+//DFSæ˜¾ç¤ºæ‰€æœ‰æ™¯ç‚¹ä¿¡æ¯
 void Display_DFS(AdjMatrix *G)
 {
-    int i=1;	
-	printf("¾°µãĞÅÏ¢ÈçÏÂ:\n");
-		UDFS(G);
+	int i = 1;	
+        printf("æ™¯ç‚¹ä¿¡æ¯å¦‚ä¸‹:\n");
+        UDFS(G);
 
 	getchar();
-	printf("\t°´ÈÎÒâ¼ü·µ»ØÏÔÊ¾²Ëµ¥!");
-    getc(stdin);
+	printf("\tæŒ‰ä»»æ„é”®è¿”å›æ˜¾ç¤ºèœå•!");
+        getc(stdin);
 	DisplayMenu(G);
 }
 
-//BFSÏÔÊ¾ËùÓĞ¾°µãĞÅÏ¢
+//BFSæ˜¾ç¤ºæ‰€æœ‰æ™¯ç‚¹ä¿¡æ¯
 void Display_BFS(AdjMatrix *G)
 {
-    int i=1;	
-	printf("¾°µãĞÅÏ¢ÈçÏÂ:\n");
-		UBFS(G);
+        int i = 1;	
+	printf("æ™¯ç‚¹ä¿¡æ¯å¦‚ä¸‹:\n");
+	UBFS(G);
 
 	getchar();
-	printf("\t°´ÈÎÒâ¼ü·µ»ØÏÔÊ¾²Ëµ¥!");
-    getc(stdin);
+	printf("\tæŒ‰ä»»æ„é”®è¿”å›æ˜¾ç¤ºèœå•!");
+        getc(stdin);
 	DisplayMenu(G);
 }
 
-//ÏÔÊ¾ËùÓĞ¾°µãĞÅÏ¢
+//æ˜¾ç¤ºæ‰€æœ‰æ™¯ç‚¹ä¿¡æ¯
 void Display(AdjMatrix *G)
 {
 	DisplayMenu(G);
 }
 
-//²éÑ¯²Ëµ¥
+//æŸ¥è¯¢èœå•
 void SearchMenu(AdjMatrix *G)
-{   
-    int  choice;
+{
+	int  choice;
 
 	printf("\t\t\t------------------------------------------------\n\n");
-	printf("\t\t\t|               »¶Ó­½øÈë²éÑ¯²Ëµ¥               |\n");
-    printf("\t\t\t|                                              |\n");
-	printf("\t\t\t|                1.°´±àºÅ²éÑ¯                  |\n");
-	printf("\t\t\t|                2.°´Ãû³Æ²éÑ¯                  |\n");
-	printf("\t\t\t|                0.·µ»ØÖ÷²Ëµ¥                       |\n");
+	printf("\t\t\t|               æ¬¢è¿è¿›å…¥æŸ¥è¯¢èœå•               |\n");
+        printf("\t\t\t|                                              |\n");
+	printf("\t\t\t|                1.æŒ‰ç¼–å·æŸ¥è¯¢                  |\n");
+	printf("\t\t\t|                2.æŒ‰åç§°æŸ¥è¯¢                  |\n");
+	printf("\t\t\t|                0.è¿”å›ä¸»èœå•                       |\n");
 	printf("\t\t\t|                                              |\n");
 	printf("\t\t\t------------------------------------------------\n\n");
 
-    printf("\tÇëÊäÈëÄúµÄÑ¡Ôñ(0~2):");
-	scanf("%d",&choice);
+        printf("\tè¯·è¾“å…¥æ‚¨çš„é€‰æ‹©(0~2):");
+	scanf("%d", &choice);
 	switch(choice)
 	{
-	case 1:Search_num(G);break;
-	case 2:Search_name(G);break;
-	case 0:Menu(G);break;
+		case 1:Search_num(G); break;
+		case 2:Search_name(G); break;
+		case 0:Menu(G); break;
 	}
 }
 
-//ÓÃ¾°µã±àºÅ²éÑ¯
+//ç”¨æ™¯ç‚¹ç¼–å·æŸ¥è¯¢
 void Search_num(AdjMatrix *G)
 {
-	int i,j,num;
+	int i, j, num;
 	char c;
     
 	ReadFile(G);
 	while(1)
 	{
-		printf("ÇëÊäÈëÄúÒª²éÕÒµÄ¾°µã±àºÅ:\n");
-		scanf("%d",&num);
-		for(i=1;i<=G->vernum;i++)
+		printf("è¯·è¾“å…¥æ‚¨è¦æŸ¥æ‰¾çš„æ™¯ç‚¹ç¼–å·:\n");
+		scanf("%d", &num);
+		for(i = 1; i <= G->vernum; i++)
 		{
-			if(num==G->vertex[i].number)
+			if(num == G->vertex[i].number)
 			{
-				printf("\tÄúÒª²éÕÒ¾°µãĞÅÏ¢ÈçÏÂ:\n");
-				printf("\tÃû³Æ:%-20s\n",G->vertex[i].name );
-				printf("\t¼ò½é:%-20s\n",G->vertex[i].description);
-	            for(j=1;j<=G->vernum;j++)
-					if(G->arcs[i][j]!=INFINITY)
-						printf("\t%s<--->%s:%dm\n",G->vertex[i].name,G->vertex[j].name,G->arcs [i][j]);
-					break;
+				printf("\tæ‚¨è¦æŸ¥æ‰¾æ™¯ç‚¹ä¿¡æ¯å¦‚ä¸‹:\n");
+				printf("\tåç§°:%-20s\n", G->vertex[i].name );
+				printf("\tç®€ä»‹:%-20s\n", G->vertex[i].description);
+	                 	for(j = 1; j <= G->vernum; j++)
+					if(G->arcs[i][j] != INFINITY)
+						printf("\t%s<--->%s:%dm\n", G->vertex[i].name, G->vertex[j].name, G->arcs [i][j]);
+				        break;
 			}
 		}
-		if(i>G->vernum)
-			printf("\n\tÎŞ¸Ã¾°µãĞÅÏ¢!\n");
+		if(i > G->vernum)
+			printf("\n\tæ— è¯¥æ™¯ç‚¹ä¿¡æ¯!\n");
 
 		getchar();
-		printf("\tÊÇ·ñ¼ÌĞø²éÑ¯(y/n)?");
-		scanf("%c",&c);
-		if(c=='n')
-		break;
+		printf("\tæ˜¯å¦ç»§ç»­æŸ¥è¯¢(y/n)?");
+		scanf("%c", &c);
+		if(c == 'n')
+			break;
 	}
 
 	getchar();
-	printf("\t°´ÈÎÒâ¼ü·µ»Ø²éÑ¯²Ëµ¥!");
-    getc(stdin);
+	printf("\tæŒ‰ä»»æ„é”®è¿”å›æŸ¥è¯¢èœå•!");
+        getc(stdin);
 	SearchMenu(G);
 }
 
-//ÓÃ¾°µãÃû³Æ²éÑ¯
+//ç”¨æ™¯ç‚¹åç§°æŸ¥è¯¢
 void Search_name(AdjMatrix *G)
 {
-	int i,j;
-	char c,name[20];
+	int i, j;
+	char c, name[20];
 
 	while(1)
 	{
-		printf("ÇëÊäÈëÄúÒª²éÕÒµÄ¾°µãÃû³Æ:\n");
-	    scanf("%s",name);
-		for(i=1;i<=G->vernum;i++)
+		printf("è¯·è¾“å…¥æ‚¨è¦æŸ¥æ‰¾çš„æ™¯ç‚¹åç§°:\n");
+	        scanf("%s", name);
+		for(i = 1; i <= G->vernum; i++)
 		{
-			if(strcmp(name,G->vertex[i].name )==0)
+			if(strcmp(name, G->vertex[i].name) == 0)
 			{
-				printf("\tÄúÒª²éÕÒ¾°µãĞÅÏ¢ÈçÏÂ:\n");
-			    printf("\t±àºÅ:%-5d\n",G->vertex [i].number );
-			    printf("\t¼ò½é:%-20s\n",G->vertex[i].description);
-				for(j=1;j<=G->vernum;j++)
-					if(G->arcs[i][j]!=INFINITY)
-						printf("\t%s<--->%s:%dm\n",G->vertex[i].name,G->vertex[j].name,G->arcs [i][j]);
+				printf("\tæ‚¨è¦æŸ¥æ‰¾æ™¯ç‚¹ä¿¡æ¯å¦‚ä¸‹:\n");
+			        printf("\tç¼–å·:%-5d\n", G->vertex [i].number );
+			        printf("\tç®€ä»‹:%-20s\n", G->vertex[i].description);
+				for(j = 1; j <= G->vernum; j++)
+					if(G->arcs[i][j] != INFINITY)
+						printf("\t%s<--->%s:%dm\n", G->vertex[i].name, G->vertex[j].name, G->arcs [i][j]);
 					break;
 			}
 		}
-	    if(i>G->vernum)
-			printf("\tÎŞ¸Ã¾°µãĞÅÏ¢!\n");
+	        if(i > G->vernum)
+			printf("\tæ— è¯¥æ™¯ç‚¹ä¿¡æ¯!\n");
 
-       	getchar();
-		printf("\tÊÇ·ñ¼ÌĞø²éÑ¯(y/n)?");
-		scanf("%c",&c);
-		if(c=='n')
-		break;
+       	        getchar();
+		printf("\tæ˜¯å¦ç»§ç»­æŸ¥è¯¢(y/n)?");
+		scanf("%c", &c);
+		if(c == 'n')
+			break;
 	}
 
 	getchar();
-	printf("\n\t°´ÈÎÒâ¼ü·µ»Ø²éÑ¯²Ëµ¥!");
-    getc(stdin);
+	printf("\n\tæŒ‰ä»»æ„é”®è¿”å›æŸ¥è¯¢èœå•!");
+        getc(stdin);
 	SearchMenu(G);
 }
 
 
-//²éÑ¯¾°µãĞÅÏ¢
+//æŸ¥è¯¢æ™¯ç‚¹ä¿¡æ¯
 void Search(AdjMatrix *G)
 {
 	SearchMenu(G);
 }
 
 
-//Ìí¼Ó¾°µã
+//æ·»åŠ æ™¯ç‚¹
 void  Add(AdjMatrix *G)
 {
-	int i,num;
-	int count,end;
-	char name1[20],name2[20],description[200];
+	int i, num;
+	int count, end;
+	char name1[20], name2[20], description[200];
 	int length;
 	ReadFile(G);
 
-	printf("ÇëÊäÈëĞÂ¾°µãµÄ±àºÅ:\n");
-	scanf("%d",&num);
-	printf("ÇëÊäÈëĞÂ¾°µãµÄÃû³Æ:\n");
-	scanf("%s",name1);
-	printf("ÇëÊäÈëĞÂ¾°µãµÄ¼ò½é:\n");
-	scanf("%s",description);
+	printf("è¯·è¾“å…¥æ–°æ™¯ç‚¹çš„ç¼–å·:\n");
+	scanf("%d", &num);
+	printf("è¯·è¾“å…¥æ–°æ™¯ç‚¹çš„åç§°:\n");
+	scanf("%s", name1);
+	printf("è¯·è¾“å…¥æ–°æ™¯ç‚¹çš„ç®€ä»‹:\n");
+	scanf("%s", description);
 
-	strcpy(G->vertex[num].name,name1);
-	strcpy(G->vertex[num].description,description);
-	G->vertex[num].number=num;
+	strcpy(G->vertex[num].name, name1);
+	strcpy(G->vertex[num].description, description);
+	G->vertex[num].number = num;
 
-	WriteFile1(G,num,name1,description);
+	WriteFile1(G, num, name1, description);
 
-	printf("ÇëÊäÈëÓëĞÂ¾°µãÁÚ½ÓµÄ¾°µã¸öÊı:\n");
-	scanf("%d",&count);
+	printf("è¯·è¾“å…¥ä¸æ–°æ™¯ç‚¹é‚»æ¥çš„æ™¯ç‚¹ä¸ªæ•°:\n");
+	scanf("%d", &count);
 
-	for(i=1;i<=count;i++)
+	for(i = 1; i <= count; i++)
 	{
-		printf("ÇëÊäÈëNo.%dÁÚ½Ó¾°µãÃû:\n",i);
-		scanf("%s",name2);
-		end=LocateVer(G,name2);
+		printf("è¯·è¾“å…¥No.%dé‚»æ¥æ™¯ç‚¹å:\n", i);
+		scanf("%s", name2);
+		end = LocateVer(G, name2);
 
-		printf("ÇëÊäÈëÂ·¾¶³¤¶È:\n");
-		scanf("%d",&length);
-		G->arcs [num][end]=	G->arcs [num][end]=length;
+		printf("è¯·è¾“å…¥è·¯å¾„é•¿åº¦:\n");
+		scanf("%d", &length);
+		G->arcs[num][end] = G->arcs[num][end] = length;
 	
 	}
 
-	for(i=1;i<=count;i++)
-	WriteFile2(G,name1,name2,length);
+	for(i = 1; i <= count; i++)
+	WriteFile2(G, name1, name2, length);
 
 	G->vernum++;
-	G->arcnum +=count;
+	G->arcnum += count;
 
 
 
 	getchar();
-	printf("\t°´ÈÎÒâ¼ü·µ»ØÖ÷²Ëµ¥!");
+	printf("\tæŒ‰ä»»æ„é”®è¿”å›ä¸»èœå•!");
 	getc(stdin);
 	Menu(G);
 }
 
-//É¾³ıÂ·Ïß
+//åˆ é™¤è·¯çº¿
 void Delete(AdjMatrix *G)
 {
-	char name1[20],name2[20];
-	int start,end;
+	char name1[20], name2[20];
+	int start, end;
 
-	printf("ÇëÊäÈëÒªÉ¾³ıÂ·ÏßµÄÆğÊ¼¾°µãÃû³Æ:\n");
-	scanf("%s",name1);
-	start=LocateVer(G,name1);
-	printf("ÖÕÖ¹¾°µãÃû³Æ:\n");
-	scanf("%s",name2);
-	end=LocateVer(G,name2);
+	printf("è¯·è¾“å…¥è¦åˆ é™¤è·¯çº¿çš„èµ·å§‹æ™¯ç‚¹åç§°:\n");
+	scanf("%s", name1);
+	start = LocateVer(G, name1);
+	printf("ç»ˆæ­¢æ™¯ç‚¹åç§°:\n");
+	scanf("%s", name2);
+	end = LocateVer(G,name2);
 
-	G->arcs [start][end]=G->arcs [end][start]=INFINITY;
+	G->arcs[start][end] = G->arcs[end][start] = INFINITY;
 
-	WriteFile2(G,name1,name2,INFINITY);
+	WriteFile2(G, name1, name2, INFINITY);
 
 	getchar();
-	printf("\t°´ÈÎÒâ¼ü·µ»ØÖ÷²Ëµ¥!");
+	printf("\tæŒ‰ä»»æ„é”®è¿”å›ä¸»èœå•!");
 	getc(stdin);
 	Menu(G);
 
 }
 
-int count =0,visited[MAXVER]={0};
-void Path1(AdjMatrix *G,int v1,int v2,int path[],int length)
+int count = 0, visited[MAXVER] = {0};
+void Path1(AdjMatrix *G, int v1, int v2, int path[], int length)
 {
 	int vi;
-	if(v1==v2)
+	if(v1 == v2)
 	{
-		printf("µÚ%dÌõ:",++count);
+		printf("ç¬¬%dæ¡:", ++count);
 
 		int  i;
-		for(i=0;i<length;i++)
-			printf("%s--->",G->vertex[path[i]].name);
-		printf("%s",G->vertex[v1].name);
+		for(i = 0; i < length; i++)
+			printf("%s--->", G->vertex[path[i]].name);
+		printf("%s", G->vertex[v1].name);
 		printf("\n");
 	}
 
 	else
 	{
-		visited[v1]=1;
-		path[length]=v1;//v1ÈëpathÊı×é
-		for(vi=1;vi<=G->vernum;vi++)
+		visited[v1] = 1;
+		path[length] = v1;//v1å…¥pathæ•°ç»„
+		for(vi = 1; vi <= G->vernum; vi++)
 		{
-			if(!visited[vi]&&G->arcs[v1][vi]!=INFINITY)
+			if(!visited[vi] && G->arcs[v1][vi] != INFINITY)
 			{
-				visited[vi]=1;
-				Path1(G,vi,v2,path,length+1);
-				visited[vi]=0;
+				visited[vi] = 1;
+				Path1(G, vi, v2, path, length+1);
+				visited[vi] = 0;
 			}
 		}
 	}
@@ -619,176 +612,174 @@ void Path1(AdjMatrix *G,int v1,int v2,int path[],int length)
 
 void path2(AdjMatrix *G,char name1[],char name2[])
 {
-    int path[MAXVER];
-	int i,j,k;
-	for(k=1;k<=G->vernum;k++)
-		visited[k]=0;
-	i=LocateVer(G,name1);
-	j=LocateVer(G,name2);
-    Path1(G,i,j,path,0);
+        int path[MAXVER];
+	int i, j, k;
+	for(k = 1; k <= G->vernum; k++)
+		visited[k] = 0;
+	i = LocateVer(G,name1);
+	j = LocateVer(G,name2);
+        Path1(G, i, j, path, 0);
 }
 
-//Á½¸ö¾°µãµÄËùÓĞÂ·¾¶
+//ä¸¤ä¸ªæ™¯ç‚¹çš„æ‰€æœ‰è·¯å¾„
 void PathAll(AdjMatrix *G)
 {
 
-	char name1[20],name2[20];
-	printf("ÇëÊäÈëÁ½¸ö¾°µãÃû:\n");
+	char name1[20], name2[20];
+	printf("è¯·è¾“å…¥ä¸¤ä¸ªæ™¯ç‚¹å:\n");
 	flushall();
-	scanf("%s %s",name1,name2);
-	path2(G,name1,name2);
+	scanf("%s %s", name1, name2);
+	path2(G, name1, name2);
 
-    getchar();
-	printf("\n\t°´ÈÎÒâ¼ü·µ»ØÖ÷²Ëµ¥!");
-    getc(stdin);
+        getchar();
+	printf("\n\tæŒ‰ä»»æ„é”®è¿”å›ä¸»èœå•!");
+        getc(stdin);
 	Menu(G);
 }
 
-//²ÉÓÃDijkstraËã·¨ÇóµÃÆğÊ¼¾°µãµ½ÆäËü¸÷¾°µãµÄ×î¶ÌÂ·¾¶
-void Dijkstra(AdjMatrix *G,int start,int end,int dist[],int path[][MAXVER])
+//é‡‡ç”¨Dijkstraç®—æ³•æ±‚å¾—èµ·å§‹æ™¯ç‚¹åˆ°å…¶å®ƒå„æ™¯ç‚¹çš„æœ€çŸ­è·¯å¾„
+void Dijkstra(AdjMatrix *G, int start, int end, int dist[], int path[][MAXVER])
 {
-	//distÊı×é¼ÇÂ¼¸÷Ìõ×î¶ÌÂ·¾¶³¤¶È£¬pathÊı×é¼ÇÂ¼¶ÔÓ¦Â·¾¶ÉÏµÄ¸÷¾°µã
+	//distæ•°ç»„è®°å½•å„æ¡æœ€çŸ­è·¯å¾„é•¿åº¦ï¼Œpathæ•°ç»„è®°å½•å¯¹åº”è·¯å¾„ä¸Šçš„å„æ™¯ç‚¹
 	int mindist;
 	int i,j,k,t;
-	for(i=1;i<=G->vernum ;i++)
+	for(i = 1; i <= G->vernum; i++)
 	{
-		dist[i]=G->arcs [start][i];
-		if(G->arcs [start][i]!=INFINITY)
-			path[i][1]=start;
+		dist[i] = G->arcs[start][i];
+		if(G->arcs[start][i] != INFINITY)
+			path[i][1] = start;
 	}
 
-	path[start][0]=1;//start¾°µãÒÑ¼ÓÈëµ½¼¯ºÏSÖĞ
-	for(i=2;i<=G->vernum ;i++)//Ñ°ÕÒ¸÷Ìõ×î¶ÌÂ·¾¶
+	path[start][0] = 1;//startæ™¯ç‚¹å·²åŠ å…¥åˆ°é›†åˆSä¸­
+	for(i = 2; i <= G->vernum; i++)//å¯»æ‰¾å„æ¡æœ€çŸ­è·¯å¾„
 	{
-		mindist=INFINITY;
-		for(j=1;j<=G->vernum ;j++)//Ñ¡ÔñÈ¨Öµ×îĞ¡µÄ±ß
-			if(!path[j][0]&&dist[j]<mindist)
+		mindist = INFINITY;
+		for(j = 1; j <= G->vernum; j++)//é€‰æ‹©æƒå€¼æœ€å°çš„è¾¹
+			if(!path[j][0] && dist[j] < mindist)
 			{
-				k=j;//ÓÃk¼ÇÂ¼ÏÂÒ»¸öÑ¡ÖĞµÄ¾°µã
-				mindist=dist[j];
+				k = j;//ç”¨kè®°å½•ä¸‹ä¸€ä¸ªé€‰ä¸­çš„æ™¯ç‚¹
+				mindist = dist[j];
 			}
 
-			if(mindist==INFINITY)
+			if(mindist == INFINITY)
 				break;
-			path[k][0]=1;//k¾°µãÒÑ¼ÓÈëµ½¼¯ºÏSÖĞ
-			for(j=1;j<=G->vernum ;j++)//ĞŞ¸ÄÂ·¾¶
+			path[k][0] = 1;//kæ™¯ç‚¹å·²åŠ å…¥åˆ°é›†åˆSä¸­
+			for(j = 1; j <= G->vernum; j++)//ä¿®æ”¹è·¯å¾„
 			{
-				if(!path[j][1]&&G->arcs [k][j]<INFINITY&&dist[k]+G->arcs [k][j]<dist[j])
+				if(!path[j][1] && G->arcs[k][j] < INFINITY && dist[k] + G->arcs[k][j] < dist[j])
 				{
-					dist[j]=dist[k]+G->arcs [k][j];
-					t=1;
-					while(path[k][t]!=0)
+					dist[j] = dist[k] + G->arcs[k][j];
+					t = 1;
+					while(path[k][t] != 0)
 					{
-						path[j][t]=path[k][t];
+						path[j][t] = path[k][t];
 						t++;
 					}
-					path[j][t]=k;
-					path[j][t+1]=0;
+					path[j][t] = k;
+					path[j][t+1] = 0;
 				}
 			}
 	}
 
-	for(i=1;i<=G->vernum ;i++)
-		if(i==end)
+	for(i = 1; i <= G->vernum; i++)
+		if(i == end)
 			break;
-			printf("%s<--->%sµÄ×î¶ÌÂ·¾¶Îª:\n´Ó%s",G->vertex [start].name,G->vertex [end].name,G->vertex [start].name);
-		for(j=2;path[i][j]!=0;j++)
-			printf("--->%s",G->vertex [path[i][j]].name);
-		printf("--->%s,\n¾àÀëÎª%dm\n",G->vertex [end].name,dist[i]);
+		printf("%s<--->%sçš„æœ€çŸ­è·¯å¾„ä¸º:\nä»%s", G->vertex [start].name, G->vertex [end].name, G->vertex [start].name);
+		for(j = 2; path[i][j] != 0; j++)
+			printf("--->%s", G->vertex[path[i][j]].name);
+		printf("--->%s,\nè·ç¦»ä¸º%dm\n", G->vertex [end].name, dist[i]);
 }
 
-//Ñ°ÕÒ×î¶ÌÂ·¾¶
+//å¯»æ‰¾æœ€çŸ­è·¯å¾„
 void ShortPath(AdjMatrix *G)
 {
 	char name[20];
 	int start,end;
-	int dist[MAXVER],path[MAXVER][MAXVER]={0};
+	int dist[MAXVER], path[MAXVER][MAXVER] = {0};
 
-	printf("ÇëÊäÈëÆğÊ¼¾°µãÃû³Æ:\n");
-	scanf("%s",name);
-	start=LocateVer(G,name);
+	printf("è¯·è¾“å…¥èµ·å§‹æ™¯ç‚¹åç§°:\n");
+	scanf("%s", name);
+	start = LocateVer(G, name);
 
-	printf("ÇëÊäÈëÖÕÖ¹¾°µãÃû³Æ:\n");
-	scanf("%s",name);
-	end=LocateVer(G,name);
+	printf("è¯·è¾“å…¥ç»ˆæ­¢æ™¯ç‚¹åç§°:\n");
+	scanf("%s", name);
+	end = LocateVer(G, name);
 
-	Dijkstra(G,start,end,dist,path);
+	Dijkstra(G, start, end, dist, path);
 
 	getchar();
-	printf("\t°´ÈÎÒâ¼ü·µ»ØÖ÷²Ëµ¥!");
+	printf("\tæŒ‰ä»»æ„é”®è¿”å›ä¸»èœå•!");
 	getc(stdin);
 	Menu(G);
 }
 
-//²ÉÓÃprimËã·¨Çó×î¶ÌÁ¬Í¨Â·¾¶
-void Prim(AdjMatrix *G,int start)
+//é‡‡ç”¨primç®—æ³•æ±‚æœ€çŸ­è¿é€šè·¯å¾„
+void Prim(AdjMatrix *G, int start)
 {
 	struct node
 	{
 		int adjvex;
 		int lowcost;
-	}closedge[MAXVER];//ÔªËØÏÂ±ê¶ÔÓ¦¾°µã±àºÅ
+	}closedge[MAXVER];//å…ƒç´ ä¸‹æ ‡å¯¹åº”æ™¯ç‚¹ç¼–å·
 
-	int i,e,k,m,min;
-	closedge[start].lowcost=0;//±êÖ¾¶¥µãstartÒÑ¼ÓÈëµ½×îĞ¡Éú³ÉÊ÷ÖĞ
+	int i, e, k, m, min;
+	closedge[start].lowcost = 0;//æ ‡å¿—é¡¶ç‚¹startå·²åŠ å…¥åˆ°æœ€å°ç”Ÿæˆæ ‘ä¸­
     
-	//¶Ô³ıÁËÆğÊ¼µãÒÔÍâµÄÆäËû¶¥µã³õÊ¼»¯¶ÔÓ¦µÄclosedgeÊı×é
-	for(i=1;i<=G->vernum ;i++)
-		if(i!=start)
+	//å¯¹é™¤äº†èµ·å§‹ç‚¹ä»¥å¤–çš„å…¶ä»–é¡¶ç‚¹åˆå§‹åŒ–å¯¹åº”çš„closedgeæ•°ç»„
+	for(i = 1; i <= G->vernum; i++)
+		if(i != start)
 		{
-			closedge[i].adjvex=start;
-			closedge[i].lowcost=G->arcs [start][i];
+			closedge[i].adjvex = start;
+			closedge[i].lowcost = G->arcs[start][i];
 		}
 
-       for(e=1;e<=G->vernum-2;e++)
-	   {
-		   //Ñ¡ÔñÈ¨Öµ×îĞ¡µÄ±ß
-           min=INFINITY;
-		   for(k=1;k<=G->vernum ;k++)
-		   {
-			   if(closedge[k].lowcost!=0&&closedge[k].lowcost<min)
-			   {
-				   m=k;//ÓÃm¼ÇÂ¼Ñ¡ÖĞµÄÏÂÒ»¸ö¶¥µã
-				   min=closedge[k].lowcost;
-			   }
-		   }
-		   printf("´Ó%s<--->%s:%dm\n",G->vertex [closedge[m].adjvex].name,G->vertex [m].name,closedge[m].lowcost);
-           closedge[m].lowcost=0;//±êÖ¾¶¥µãmÒÑ¼ÓÈëµ½×îĞ¡Éú³ÉÊ÷ÖÖ
+        for(e = 1; e <= G->vernum-2; e++)
+	{
+		//é€‰æ‹©æƒå€¼æœ€å°çš„è¾¹
+       		min = INFINITY;
+		for(k = 1; k <= G->vernum; k++)
+		{
+			if(closedge[k].lowcost != 0 && closedge[k].lowcost < min)
+			{
+		        	m = k;//ç”¨mè®°å½•é€‰ä¸­çš„ä¸‹ä¸€ä¸ªé¡¶ç‚¹
+				min = closedge[k].lowcost;
+			}
+		}
+		printf("ä»%s<--->%s:%dm\n", G->vertex [closedge[m].adjvex].name, G->vertex [m].name, closedge[m].lowcost);
+                closedge[m].lowcost = 0;//æ ‡å¿—é¡¶ç‚¹må·²åŠ å…¥åˆ°æœ€å°ç”Ÿæˆæ ‘ç§
 
-		   //µ±ĞÂ¶¥µã¼ÓÈë×îĞ¡Éú³ÉÊ÷ºó£¬¸ü¸ÄclosedgeÊı×éĞÅÏ¢
-		   for(i=1;i<=G->vernum ;i++)
-			   if(i!=m&&G->arcs[m][i]<closedge[i].lowcost)
-			   //Ò»µ©·¢ÏÖ¸üĞ¡µÄÈ¨Öµ±ß³öÏÖ£¬ÔòÌæ»»Ô­ÓĞĞÅÏ¢
-			   {
-				   closedge[i].lowcost=G->arcs [m][i];
-				   closedge[i].adjvex=m;//³ö·¢µã¸Ä±ä
-			   }
-	   }
+		//å½“æ–°é¡¶ç‚¹åŠ å…¥æœ€å°ç”Ÿæˆæ ‘åï¼Œæ›´æ”¹closedgeæ•°ç»„ä¿¡æ¯
+		for(i = 1; i <= G->vernum; i++)
+			if(i != m && G->arcs[m][i] < closedge[i].lowcost)
+		        //ä¸€æ—¦å‘ç°æ›´å°çš„æƒå€¼è¾¹å‡ºç°ï¼Œåˆ™æ›¿æ¢åŸæœ‰ä¿¡æ¯
+			{
+		        	closedge[i].lowcost = G->arcs[m][i];
+				closedge[i].adjvex = m;//å‡ºå‘ç‚¹æ”¹å˜
+			}
+	}
 }
 
-//²éÑ¯´ÓÄ³¸ö¾°µã¿ªÊ¼µÄ×î¶ÌÁ¬Í¨Â·¾¶
+//æŸ¥è¯¢ä»æŸä¸ªæ™¯ç‚¹å¼€å§‹çš„æœ€çŸ­è¿é€šè·¯å¾„
 void MiniSpanTree(AdjMatrix *G)
 {
 	char name[20];
 	int start;
 
-	printf("ÇëÊäÈëÆğÊ¼¾°µãÃû³Æ:\n");
-	scanf("%s",name);
-	start=LocateVer(G,name);
-	Prim(G,start);
+	printf("è¯·è¾“å…¥èµ·å§‹æ™¯ç‚¹åç§°:\n");
+	scanf("%s", name);
+	start = LocateVer(G, name);
+	Prim(G, start);
 
 	getchar();
-	printf("\t°´ÈÎÒâ¼ü·µ»ØÖ÷²Ëµ¥!");
+	printf("\tæŒ‰ä»»æ„é”®è¿”å›ä¸»èœå•!");
 	getc(stdin);
 	Menu(G);
-	
 }
 
 void main()
 {   
-	
 	AdjMatrix *G;
-	G=(AdjMatrix *)malloc(sizeof(AdjMatrix));
+	G = (AdjMatrix *)malloc(sizeof(AdjMatrix));
 	ReadFile(G);
 	Menu(G);
 }
